@@ -129,5 +129,127 @@ checkpoint_path = 'custom_cnn_checkpoint.pth' # File path to save the best model
     train_losses_history.append(avg_train_loss)
     print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
       
+7.Validation Phase 
 
+Function of validation phase: 
+
+      def evaluate_validation_set(model, val_dataloader, criterion):
+          # Ensure the model is in evaluation mode
+          model.eval()
+    
+          total_loss = 0.0
+          correct_predictions = 0
+          total_samples = 0
+          
+          # We use torch.no_grad() because we don't need to calculate gradients during validation
+          with torch.no_grad():
+              for images, actual_labels in val_dataloader:
+                  # 1. Forward pass
+                  outputs = model(pixel_values=images, labels=actual_labels)
+                  
+                  # Calculate batch loss (optional, but good practice)
+                  loss = criterion(outputs, actual_labels)
+                  
+                  total_loss += loss.item() * images.size(0) # Accumulate weighted loss
+                  
+                  # 2. Get predictions (indices of the max probability)
+                  _, predicted_labels = torch.max(outputs.data, 1)
+                  
+                  # 3. Track total samples
+                  batch_size = actual_labels.size(0)
+                  total_samples += batch_size
+                  
+                  # 4. Track correct predictions
+                  # Compare predicted indices with actual labels
+                  correct_predictions += (predicted_labels == actual_labels).sum().item()
+                  
+                  # --- Optional: Print batch-specific metrics ---
+                  # print(f'Batch Size: {batch_size}, Correct: {((predicted_labels == actual_labels).sum().item() / batch_size) * 100:.2f}% Accuracy')
+                  # print('************************************')
+
+    # Calculate average loss and total accuracy for the whole epoch/dataset
+    avg_loss = total_loss / total_samples
+    overall_accuracy = (correct_predictions / total_samples) * 100.0
+    
+    return avg_loss, overall_accuracy
+    
+    model.eval()
+    current_epoch_val_losses = []
+         # Use the evaluation function we discussed earlier
+    avg_val_loss, overall_accuracy = evaluate_validation_set(model, val_dataloader, criterion)
+    
+    val_losses_history.append(avg_val_loss)
+    val_accuracy_history.append(overall_accuracy)
+    
+--- Checkpointing Logic: Save the model if this epoch is the best so far ---
+
+    if avg_val_loss < best_val_loss:
+                print(f"Validation loss decreased ({best_val_loss:.4f} --> {avg_val_loss:.4f}). Saving model checkpoint...")
+                best_val_loss = avg_val_loss
+        
+        # Save the model's parameters (state_dict) to a file
+                torch.save(model.state_dict(), checkpoint_path)
+
+ --- LOGGING AND SAVING ---
+ 
+    print(f'Epoch [{epoch+1}/{num_epochs}], '
+          f'Train Loss: {avg_train_loss:.4f}, '
+          f'Validation Loss: {avg_val_loss:.4f}, '
+          f'Validation Accuracy: {overall_accuracy:.2f}%')   
+
+      val_loss, val_accuracy = evaluate_validation_set(model, val_dataloader, criterion)
+      print(f'Avg Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.2f}%')
+
+# Data provided from the training log for CNN model represented in picture
+
+train_losses = [
+    1.5994, 0.9242, 0.6726, 0.5453, 0.4487, 0.3624, 0.2948, 0.2354, 0.2122, 0.1833,
+    0.1550, 0.1278, 0.1239, 0.0936, 0.0807, 0.0889, 0.0795, 0.0625, 0.0409, 0.0668
+]
+
+validation_losses = [
+    1.3709, 0.8149, 0.6736, 0.5606, 0.4777, 0.4917, 0.3777, 0.3288, 0.2901, 0.2758,
+    0.2483, 0.2764, 0.2282, 0.1862, 0.2368, 0.2470, 0.2662, 0.1939, 0.1987, 0.2097
+]
+
+      # epochs = range(1, len(train_losses) + 1)
+      
+      # # Highlight the optimal stopping point (around Epoch 14)
+      # optimal_epoch = 14
+      # optimal_val_loss = validation_losses[optimal_epoch - 1]
+      
+      # Plotting the data
+      # plt.figure(figsize=(10, 6))
+      # plt.plot(epochs, train_losses, label='Training Loss', color='blue', linestyle='-', linewidth=2)
+      # plt.plot(epochs, validation_losses, label='Validation Loss', color='red', linestyle='--', linewidth=2)
+      
+      # # Mark the optimal stopping point
+      # plt.axvline(x=optimal_epoch, color='green', linestyle=':', linewidth=2, label=f'Optimal Stopping Point (Epoch {optimal_epoch})')
+      # plt.scatter(optimal_epoch, optimal_val_loss, color='green', s=100, zorder=5)
+      
+      # Adding titles and labels
+      # plt.title('Training and Validation Loss Over Epochs (Learning Curve) for CNN Model')
+      # plt.xlabel('Epoch')
+      # plt.ylabel('Loss Value')
+      # plt.legend()
+      # plt.grid(True, which='both', linestyle=':', linewidth=0.5)
+      
+      # # Set x-axis ticks to show every epoch clearly
+      # plt.xticks(epochs)
+      
+      # # Display the plot
+      # plt.tight_layout()
+      # plt.show()
+      
+<img width="1280" height="612" alt="Learning curve final" src="https://github.com/user-attachments/assets/0fb66438-601a-4964-862c-52f4e340381b" />
+
+
+# #  Load the weights from the OPTIMAL Epoch (Epoch 14 weights)
+
+      # try:
+      #     model.load_state_dict(torch.load(CHECKPOINT_PATH))
+      #     print(f"Successfully loaded optimal model weights from {CHECKPOINT_PATH}")
+      # except FileNotFoundError:
+      #     print(f"Error: Checkpoint file not found at {CHECKPOINT_PATH}. Cannot run test evaluation.")
+      #     exit()
 
