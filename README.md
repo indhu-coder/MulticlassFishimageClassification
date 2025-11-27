@@ -95,8 +95,8 @@ Code for the same architecture given below:
       val_losses_history = []
       val_accuracy_history = []
       
-# Initialize a variable to keep track of the best validation loss found so far
-# Start with a high number so the first epoch is always better
+Initialize a variable to keep track of the best validation loss found so far
+Start with a high number so the first epoch is always better
 best_val_loss = float('inf') 
 checkpoint_path = 'custom_cnn_checkpoint.pth' # File path to save the best model weights
 
