@@ -200,7 +200,7 @@ Function of validation phase:
       val_loss, val_accuracy = evaluate_validation_set(model, val_dataloader, criterion)
       print(f'Avg Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.2f}%')
 
-# Data provided from the training log for CNN model represented in picture
+Data provided from the training log for CNN model represented in picture
 
 train_losses = [
     1.5994, 0.9242, 0.6726, 0.5453, 0.4487, 0.3624, 0.2948, 0.2354, 0.2122, 0.1833,
@@ -244,7 +244,7 @@ validation_losses = [
 <img width="1280" height="612" alt="Learning curve final" src="https://github.com/user-attachments/assets/0fb66438-601a-4964-862c-52f4e340381b" />
 
 
-# #  Load the weights from the OPTIMAL Epoch (Epoch 14 weights)
+Load the weights from the OPTIMAL Epoch (Epoch 14 weights)
 
       # try:
       #     model.load_state_dict(torch.load(CHECKPOINT_PATH))
@@ -252,4 +252,150 @@ validation_losses = [
       # except FileNotFoundError:
       #     print(f"Error: Checkpoint file not found at {CHECKPOINT_PATH}. Cannot run test evaluation.")
       #     exit()
+8.Testing phase
+
+       test_dataset = datasets.ImageFolder(root = "D:/Multiclass Fish Image classification/images.cv/data/test",      # Replace with your actual root path
+        #     transform=data_transforms
+        # test_dataloader = DataLoader(
+        #     test_dataset,batch_size=64,shuffle=True)
+
+        # # def evaluate_test_set(model, test_dataloader, criterion):
+        # #     # Ensure the model is in evaluation
+        # #     model.eval()
+        # #     total_loss = 0.0
+        # #     correct_predictions = 0
+        # #     total_samples = 0
+        # #         # Lists to store ALL predictions and actuals for Confusion Matrix/Metrics
+        # #     all_predicted_labels = []
+        # #     all_actual_labels = []
+
+        # #     with torch.no_grad():
+        # #         for images, actual_labels in test_dataloader:
+        # #             outputs = model(pixel_values=images, labels=actual_labels)
+        # #             loss = criterion(outputs, actual_labels)
+        # #             total_loss += loss.item() * images.size(0)
+        # #             _, predicted_labels = torch.max(outputs.data, 1)
+        # #             batch_size = actual_labels.size(0)
+        # #             total_samples += batch_size
+        # #             correct_predictions += (predicted_labels == actual_labels).sum().item()
+
+                    
+        # #             # --- Capture all labels for metrics ---
+        # #             all_predicted_labels.extend(predicted_labels.tolist())
+        # #             all_actual_labels.extend(actual_labels.tolist())
+
+        # #             avg_loss = total_loss / total_samples
+        # #             overall_accuracy = (correct_predictions / total_samples) * 100.0
+        # #         return avg_loss, overall_accuracy, all_predicted_labels, all_actual_labels
+            
+
+        # # # Run the evaluation
+        # # test_loss, test_accuracy, predictions, actuals = evaluate_test_set(model, test_dataloader, criterion)
+
+        # # print(f'Final Test Loss: {test_loss:.4f}')
+        # # print(f'Final Test Accuracy: {test_accuracy:.2f}%')
+
+The output is 
+Successfully loaded optimal model weights from custom_cnn_checkpoint.pth
+Final Test Loss: 0.1705
+Final Test Accuracy: 94.79%
+
+9.Evaluation Metrics
+
+      # Generate the Classification Report (Precision, Recall, F1-Score)
+      print("\n--- Classification Report (Test Data) ---")
+      
+      target_names = [train_dataset.classes[i] for i in range(len(train_dataset.classes))]
+      print(classification_report(actuals, predictions, target_names=target_names))
+      
+      # Generate and Plot the Confusion Matrix
+      cm = confusion_matrix(actuals, predictions)
+      plt.figure(figsize=(10, 8))
+      sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=target_names, yticklabels=target_names)
+      plt.xlabel('Predicted Label')
+      plt.ylabel('True Label')
+      plt.title('Confusion Matrix for Test Set')
+      plt.show()
+
+and the output is
+
+      --- Classification Report (Test Data) ---
+                                        precision    recall  f1-score   support
+      
+                           animal fish       0.97      0.95      0.96       520
+                      animal fish bass       0.00      0.00      0.00        13
+         fish sea_food black_sea_sprat       0.91      0.99      0.95       298
+         fish sea_food gilt_head_bream       0.95      0.94      0.95       305
+         fish sea_food hourse_mackerel       0.92      0.97      0.94       286
+              fish sea_food red_mullet       0.96      0.91      0.93       291
+           fish sea_food red_sea_bream       0.96      0.95      0.95       273
+                fish sea_food sea_bass       0.93      0.92      0.93       327
+                  fish sea_food shrimp       0.99      0.98      0.98       289
+      fish sea_food striped_red_mullet       0.93      0.92      0.93       293
+                   fish sea_food trout       0.98      0.99      0.99       292
+      
+                              accuracy                           0.95      3187
+                             macro avg       0.86      0.87      0.86      3187
+                          weighted avg       0.95      0.95      0.95      3187
+
+<img width="1280" height="612" alt="confusion matrix final" src="https://github.com/user-attachments/assets/a00d7bb0-958e-4c4b-9703-624468083faf" />
+
+Now its time to test a single image prediction using customised CNN architecture.
+
+      def predict_single_image(model, image_path, transform, class_names, threshold=0.65,T=10.0):
+         #     from PIL import Image
+         #     # Load and preprocess the image
+         #     image = Image.open(image_path) # Ensure it's in RGB format
+             
+         #     transform = transforms.Compose([
+         #         transforms.Grayscale(num_output_channels=1),
+         #          transforms.Resize((128,128)),
+         #          transforms.ToTensor(),
+         #             transforms.Normalize((0.5,),(0.5,)),
+         #              transforms.RandomRotation(degrees = (-20,+20))
+         #     ])
+         #     image = transform(image).unsqueeze(0)  # Add batch dimension
+         #     # Set model to evaluation mode
+         #     model.eval()
+             
+         #     with torch.no_grad():
+         #          # Forward pass
+         #         logits = model(image)
+         
+                
+         
+         #        # Apply temperature scaling
+         #         scaled_logits = logits / T
+         
+         #         # Compute softmax with temperature
+         #         probs = F.softmax(scaled_logits, dim=1)
+         
+         #         # Get max probability and predicted class index
+         #         max_prob, pred_idx = torch.max(probs, dim=1)
+         #         max_prob = max_prob.item()
+         #         pred_idx = pred_idx.item()
+         
+           
+         
+         #         # Check threshold
+         #         if max_prob < threshold:
+         #             return class_names[pred_idx], max_prob
+         #         else:
+         #             return "Unknown",max_prob
+                 
+         
+         
+         # # Example usage:
+         # image_path = 'D:/Multiclass Fish Image classification/images.cv/data/4.jpg'
+         # CLASS_NAMES = train_dataset.classes  # Assuming you have this from your dataset
+         # predicted_label, confidence_score = predict_single_image(model, image_path, transforms,CLASS_NAMES,threshold = 0.65,T=10.0)
+         
+         # print(f"The model predicted: {predicted_label} with {confidence_score:.2f}% confidence.")
+         
+         # plt.imshow(imread(image_path))
+         # plt.axis('off')
+         # plt.title(f'Predicted Class: {predicted_label} ({confidence_score:.2f}%)')
+         # plt.show()
+
+
 
