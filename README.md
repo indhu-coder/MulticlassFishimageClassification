@@ -297,8 +297,8 @@ Load the weights from the OPTIMAL Epoch (Epoch 14 weights)
 
 The output is 
 Successfully loaded optimal model weights from custom_cnn_checkpoint.pth
-Final Test Loss: 0.1705
-Final Test Accuracy: 94.79%
+Final Test Loss: 0.1669
+Final Test Accuracy: 94.92%
 
 9.Evaluation Metrics
 
@@ -320,25 +320,25 @@ Final Test Accuracy: 94.79%
 and the output is
 
       --- Classification Report (Test Data) ---
-                                        precision    recall  f1-score   support
+                                          precision    recall  f1-score   support
       
-                           animal fish       0.97      0.95      0.96       520
+                           animal fish       0.97      0.96      0.96       520
                       animal fish bass       0.00      0.00      0.00        13
-         fish sea_food black_sea_sprat       0.91      0.99      0.95       298
-         fish sea_food gilt_head_bream       0.95      0.94      0.95       305
-         fish sea_food hourse_mackerel       0.92      0.97      0.94       286
-              fish sea_food red_mullet       0.96      0.91      0.93       291
-           fish sea_food red_sea_bream       0.96      0.95      0.95       273
-                fish sea_food sea_bass       0.93      0.92      0.93       327
-                  fish sea_food shrimp       0.99      0.98      0.98       289
-      fish sea_food striped_red_mullet       0.93      0.92      0.93       293
-                   fish sea_food trout       0.98      0.99      0.99       292
+         fish sea_food black_sea_sprat       0.91      1.00      0.95       298
+         fish sea_food gilt_head_bream       0.96      0.94      0.95       305
+         fish sea_food hourse_mackerel       0.91      0.96      0.93       286
+              fish sea_food red_mullet       0.96      0.90      0.93       291
+           fish sea_food red_sea_bream       0.96      0.96      0.96       273
+                fish sea_food sea_bass       0.95      0.94      0.94       327
+                  fish sea_food shrimp       0.99      0.97      0.98       289
+      fish sea_food striped_red_mullet       0.93      0.93      0.93       293
+                   fish sea_food trout       0.98      0.99      0.98       292
       
                               accuracy                           0.95      3187
                              macro avg       0.86      0.87      0.86      3187
                           weighted avg       0.95      0.95      0.95      3187
-
-<img width="1280" height="612" alt="confusion matrix final" src="https://github.com/user-attachments/assets/a00d7bb0-958e-4c4b-9703-624468083faf" />
+                          
+<img width="1280" height="612" alt="Confusion matric for CNN" src="https://github.com/user-attachments/assets/f7bb06d9-3dea-4e2e-8be5-2033b98009b2" />
 
 Now its time to test a single image prediction using customised CNN architecture.
 
@@ -396,6 +396,20 @@ Now its time to test a single image prediction using customised CNN architecture
          # plt.axis('off')
          # plt.title(f'Predicted Class: {predicted_label} ({confidence_score:.2f}%)')
          # plt.show()
+         
+Predicted Output:
+
+The model predicted: Unknown with 0.78% confidence.
+
+<img width="640" height="480" alt="Prediction for CNN" src="https://github.com/user-attachments/assets/48c68ccf-a77a-472e-9070-a1d1a0e00429" />
+
+The model predicted: fish sea_food red_sea_bream with 0.36% confidence.
+
+<img width="640" height="480" alt="Predicted for CNN known images" src="https://github.com/user-attachments/assets/b2977ae1-f77f-4273-9899-51781c745351" />
+
+
+
+
 
 
 
