@@ -64,7 +64,7 @@ CNNs are comprised of three types of layers. These are convolutional layers, poo
 for further in-depth knowledge kindly refer the paper attched below:
 https://arxiv.org/pdf/1511.08458
 
-Code for the same architecture given below:
+Code for the customised CNN architecture given below:
 
       class CNN (nn.Module):
       #     def __init__(self):
@@ -87,6 +87,9 @@ Code for the same architecture given below:
       #         return output
 
 6.The Training phase
+
+Initialize a variable to keep track of the best validation loss found so far
+Start with a high number so the first epoch is always better.
   
       model = CNN()
       criterion = nn.CrossEntropyLoss()
@@ -94,13 +97,10 @@ Code for the same architecture given below:
       train_losses_history = []
       val_losses_history = []
       val_accuracy_history = []
-      
-Initialize a variable to keep track of the best validation loss found so far
-Start with a high number so the first epoch is always better
-best_val_loss = float('inf') 
-checkpoint_path = 'custom_cnn_checkpoint.pth' # File path to save the best model weights
 
-# # # Training the model
+      best_val_loss = float('inf') 
+      checkpoint_path = 'custom_cnn_checkpoint.pth' # File path to save the best model weights
+     
       num_epochs = 20
 
       for epoch in range(num_epochs):
