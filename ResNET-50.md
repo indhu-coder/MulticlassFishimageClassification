@@ -165,25 +165,25 @@ Generate the Classification Report (Precision, Recall, F1-Score)
 
 The result is
 
-                                   precision    recall  f1-score   support
+                                         precision    recall  f1-score   support
 
-                     animal fish       0.99      0.96      0.98       520
-                animal fish bass       0.57      0.92      0.71        13
-   fish sea_food black_sea_sprat       1.00      0.89      0.94       298
-   fish sea_food gilt_head_bream       0.92      1.00      0.96       305
-   fish sea_food hourse_mackerel       0.95      0.99      0.97       286
-        fish sea_food red_mullet       1.00      0.99      0.99       291
-     fish sea_food red_sea_bream       1.00      0.92      0.96       273
-          fish sea_food sea_bass       0.98      0.98      0.98       327
-            fish sea_food shrimp       1.00      1.00      1.00       289
-fish sea_food striped_red_mullet       0.96      0.99      0.97       293
-             fish sea_food trout       0.99      1.00      0.99       292
-                         unknown       0.00      0.00      0.00         0
-                    unrecognized       0.00      0.00      0.00         0
-
-                        accuracy                           0.97      3187
-                       macro avg       0.80      0.82      0.80      3187
-                    weighted avg       0.98      0.97      0.97      3187
+                             animal fish       0.99      0.96      0.98       520
+                        animal fish bass       0.57      0.92      0.71        13
+           fish sea_food black_sea_sprat       1.00      0.89      0.94       298
+           fish sea_food gilt_head_bream       0.92      1.00      0.96       305
+           fish sea_food hourse_mackerel       0.95      0.99      0.97       286
+                fish sea_food red_mullet       1.00      0.99      0.99       291
+             fish sea_food red_sea_bream       1.00      0.92      0.96       273
+                  fish sea_food sea_bass       0.98      0.98      0.98       327
+                    fish sea_food shrimp       1.00      1.00      1.00       289
+        fish sea_food striped_red_mullet       0.96      0.99      0.97       293
+                     fish sea_food trout       0.99      1.00      0.99       292
+                                 unknown       0.00      0.00      0.00         0
+                            unrecognized       0.00      0.00      0.00         0
+        
+                                accuracy                           0.97      3187
+                               macro avg       0.80      0.82      0.80      3187
+                            weighted avg       0.98      0.97      0.97      3187
 
 Now for single image inference the code is as follows:
 
