@@ -1,0 +1,62 @@
+Multiclass Fish Image Classification using RESNET-50 Architecture(Pre-Trained model)
+
+
+Pre-Trained model from Hugging face:
+ResNet (Residual Network) is a convolutional neural network that democratized the concepts of residual learning and skip connections. This enables to train much deeper models.
+This is ResNet v1.5, which differs from the original model: in the bottleneck blocks which require downsampling, v1 has stride = 2 in the first 1x1 convolution, whereas v1.5 has stride = 2 in the 3x3 convolution. 
+
+
+Pre-processing the images for the pre-trained model:
+        
+            def preprocess_image(image):
+              #Setting return_tensors="pt" ensures it returns PyTorch tensors
+            processed_image = processor(image, return_tensors="pt")['pixel_values'][0]
+    	        #The [0] is to remove the batch dimension the processor adds by default
+            return processed_image
+
+Calling the model from Hugging Face:
+
+            processor = AutoImageProcessor.from_pretrained("microsoft/resnet-50",use_fast=True)
+            model = ResNetForImageClassification.from_pretrained("microsoft/resnet-50")
+
+Training the model:
+
+       # set device to GPU if available
+        device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        # print(f"Using device: {device}")
+        model = model.to(device)  # Move model to CPU (or 'cuda' for GPU if available)
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(model.parameters(), lr=0.001)
+    #     train_losses_history = []
+    #     val_losses_history = []
+    #     val_accuracy_history = []
+     num_epochs = 1
+    #     for epoch in range(num_epochs):
+    #         # --- 1. TRAINING PHASE ---
+    #             model.train()
+    #             running_loss = 0.0
+    #             current_epoch_train_losses = []
+    #             for images,labels in train_dataloader:
+    #                 # images = images.float()
+    #                 # print(f"Batch of images shape: {images.shape}")
+    #                 images,labels = images.to(device),labels.to(device)
+    #                 optimizer.zero_grad() #` Zero the gradients`
+    #                 predicted_outputs = model(pixel_values=images,labels = labels)  # Forward pass
+                
+    #                 # print(predicted_outputs)
+    #                 loss=predicted_outputs.loss
+               
+    #                 # Backpropagation and optimization
+    #                 loss.backward()
+    #                 optimizer.step()
+
+    #                 running_loss += loss.item()
+                   
+    #     train_loss = running_loss / len(train_dataloader)
+    #     current_epoch_train_losses.append(loss.item())
+            
+    #     # #     # Calculate average training loss for this epoch
+    #     avg_train_loss = sum(current_epoch_train_losses) / len(current_epoch_train_losses)
+    #     train_losses_history.append(avg_train_loss)
+    # #     # print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
+        
