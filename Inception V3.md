@@ -484,7 +484,7 @@ Now comes th freezing ad unfreezing of the layers of the model.
         
 Training phase:
 
-# Training loop with fc
+Training loop with fc
 
         
          for epoch in range(EPOCHS):
@@ -501,13 +501,14 @@ Training phase:
         # #         train_loss += loss.item()
 
 
-# #Energy-Based Prediction with Temperature Scaling
-# def energy_score(logits, T=1.0):
-#     """
-#     logits: Tensor of shape [B, C]
-#     returns: energy score per sample [B]
-#     """
-#     return -T * torch.logsumexp(logits / T, dim=1)
+Energy-Based Prediction with Temperature Scaling
+
+    # def energy_score(logits, T=1.0):
+    #     """
+    #     logits: Tensor of shape [B, C]
+    #     returns: energy score per sample [B]
+    #     """
+    #     return -T * torch.logsumexp(logits / T, dim=1)
 
 Validation phase:
 
@@ -572,27 +573,27 @@ Next comes about saving the model and loading the checkpoints fro calculating Te
         model.eval()
         class_names = checkpoint["class_names"]
 
+Testing the model
 
-# # Test the model
-# # correct, total = 0, 0
-# # y_true = []
-# # y_pred = []
-# # UNKNOWN_IDX = len(class_names)
-# # all_class_names = class_names + ["unknown"]
-# # with torch.no_grad():
-# #     for imgs, labels in test_loader:
-# #         imgs, labels = imgs.to(DEVICE), labels.to(DEVICE)
-# #         logits = model(imgs)
-# #         energy = energy_score(logits, T=T)
-
-# #         preds = logits.argmax(dim=1)
-# #         preds[energy > ENERGY_T] = UNKNOWN_IDX
-
-# #         y_true.extend(labels.cpu().numpy())
-# #         y_pred.extend(preds.cpu().numpy())
-
-# # print("ENERGY_T:", ENERGY_T)
-# # print(f"Final Test Accuracy: {test_acc:.2f}%")
+    # # correct, total = 0, 0
+    # # y_true = []
+    # # y_pred = []
+    # # UNKNOWN_IDX = len(class_names)
+    # # all_class_names = class_names + ["unknown"]
+    # # with torch.no_grad():
+    # #     for imgs, labels in test_loader:
+    # #         imgs, labels = imgs.to(DEVICE), labels.to(DEVICE)
+    # #         logits = model(imgs)
+    # #         energy = energy_score(logits, T=T)
+    
+    # #         preds = logits.argmax(dim=1)
+    # #         preds[energy > ENERGY_T] = UNKNOWN_IDX
+    
+    # #         y_true.extend(labels.cpu().numpy())
+    # #         y_pred.extend(preds.cpu().numpy())
+    
+    # # print("ENERGY_T:", ENERGY_T)
+    # # print(f"Final Test Accuracy: {test_acc:.2f}%")
 
 Thes result is
 
