@@ -3,7 +3,8 @@ It uses depthwise separable convolutions, which split standard convolution into 
 This makes MobileNet much faster than traditional CNNs while maintaining good accuracy.
 Because of its efficiency, MobileNet is widely used in real-time applications like mobile vision, embedded systems, and edge AI.
 
-<img width="723" height="319" alt="Mobilenet image" src="https://github.com/user-attachments/assets/20cd9c8e-8f5c-46b0-ae8f-f4bf951da696" />
+<img width="2756" height="2141" alt="Mobilenet image" src="https://github.com/user-attachments/assets/f8895117-4ffd-4109-98de-4477b8b59686" />
+
 
 MobileNetV2 from torchvision was chosen due to its lightweight design, ease of training, and strong performance on limited datasets.
 
