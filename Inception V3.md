@@ -484,12 +484,12 @@ Now comes th freezing ad unfreezing of the layers of the model.
         
 Training phase:
 
-# # Training loop with fc
+# Training loop with fc
 
         
-        # # for epoch in range(EPOCHS):
-        # #     model.train()
-        # #     train_loss = 0
+         for epoch in range(EPOCHS):
+            model.train()
+          train_loss = 0
         
         # #     for imgs, labels in train_loader:
         # #         imgs, labels = imgs.to(DEVICE), labels.to(DEVICE)
