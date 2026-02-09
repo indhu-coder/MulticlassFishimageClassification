@@ -425,19 +425,15 @@ The model predicted: fish sea_food trout with 38.81% confidence.
 
 Limitations:
 
-Performance is reduced for classes with fewer samples.
-
-The model may not generalize well to unseen fish species.
-
-Fixed input image size limits real-world adaptability.
+-->Performance is reduced for classes with fewer samples.
+-->The model may not generalize well to unseen fish species.
+-->Fixed input image size limits real-world adaptability.
 
 Future Scope:
 
-Balance the dataset to improve minority class performance.
-
-Use deeper pre-trained models for better accuracy.
-
-Add unknown class detection for real-world scenarios.
+-->Balance the dataset to improve minority class performance.
+-->Use deeper pre-trained models for better accuracy.
+-->Add unknown class detection for real-world scenarios.
 
 
 
