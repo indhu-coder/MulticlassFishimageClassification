@@ -67,25 +67,34 @@ https://arxiv.org/pdf/1511.08458
 Code for the customised CNN architecture given below:
 
       class CNN (nn.Module):
-      #     def __init__(self):
-      #         super().__init__()
-      #         self.conv1 = nn.Conv2d(in_channels= 1,out_channels=32,kernel_size=3,padding=1,stride=1)
-      #         self.pool = nn.MaxPool2d(kernel_size=2,stride=2)
-      #         self.conv2 = nn.Conv2d(in_channels= 32,out_channels=64,kernel_size=3,padding=1,stride=1)
-              
-      #         self.relu = nn.ReLU()
-      #         self.fc1 = nn.Linear(in_features = 64*32*32,out_features = 128) 
-      #         self.fc2 = nn.Linear(in_features = 128,out_features = 11)
-      
-      #     def forward(self,x):
-      #         conv1 = self.pool(self.relu(self.conv1(x))) 
-      #         conv2 = self.pool(self.relu(self.conv2(conv1)))
-              
-      #         flatten = conv2.view(-1,64*32*32)
-      #         fc1 = self.relu(self.fc1(flatten))
-      #         output = self.fc2(fc1)
-      #         return output
+       def __init__(self):
+           super().__init__()
+           self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1)
+           self.pool = nn.MaxPool2d(kernel_size=2,stride=2)
+           self.conv2 = nn.Conv2d(in_channels= 32,out_channels=64,kernel_size=3,padding=1,stride=1)
+           self.relu = nn.ReLU()
+           self.adaptive_pool = nn.AdaptiveAvgPool2d((4, 4))
+           self.fc1 = nn.Linear(in_features = 64*4*4,out_features = 128) 
+           self.fc2 = nn.Linear(in_features = 128,out_features = 11)
 
+       def forward(self,x):
+           x = self.pool(self.relu(self.conv1(x)))
+           x = self.pool(self.relu(self.conv2(x)))
+           x = self.adaptive_pool(x)      # ✅ fixed size
+           x = torch.flatten(x, 1)        # ✅ safe flatten
+           x = self.relu(self.fc1(x))
+           x = self.fc2(x)
+           return x
+
+In CNNs, the size of feature maps changes depending on:
+
+input image size
+
+number of pooling layers
+
+This creates problems when connecting to fully connected (FC) layers, which need a fixed input size.
+
+👉 Adaptive pooling solves this by forcing a fixed output shape.
 6.The Training phase
 
 Initialize a variable to keep track of the best validation loss found so far
@@ -128,7 +137,9 @@ Start with a high number so the first epoch is always better.
     avg_train_loss = sum(current_epoch_train_losses) / len(current_epoch_train_losses)
     train_losses_history.append(avg_train_loss)
     print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
-      
+
+The custom CNN was trained for 20 epochs, during which the training loss consistently decreased from 1.49 to 0.03. This trend indicates effective learning and stable convergence of the model.
+
 7.Validation Phase 
 
 Function of validation phase: 
@@ -173,7 +184,7 @@ Function of validation phase:
     
     return avg_loss, overall_accuracy
     
-    model.eval()
+    
     current_epoch_val_losses = []
          # Use the evaluation function we discussed earlier
     avg_val_loss, overall_accuracy = evaluate_validation_set(model, val_dataloader, criterion)
@@ -186,12 +197,12 @@ Function of validation phase:
     if avg_val_loss < best_val_loss:
                 print(f"Validation loss decreased ({best_val_loss:.4f} --> {avg_val_loss:.4f}). Saving model checkpoint...")
                 best_val_loss = avg_val_loss
-        
+                
+   --- LOGGING AND SAVING ---
+   
         # Save the model's parameters (state_dict) to a file
                 torch.save(model.state_dict(), checkpoint_path)
 
- --- LOGGING AND SAVING ---
- 
     print(f'Epoch [{epoch+1}/{num_epochs}], '
           f'Train Loss: {avg_train_loss:.4f}, '
           f'Validation Loss: {avg_val_loss:.4f}, '
@@ -199,23 +210,28 @@ Function of validation phase:
 
       val_loss, val_accuracy = evaluate_validation_set(model, val_dataloader, criterion)
       print(f'Avg Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.2f}%')
+      
+The custom CNN was trained for 20 epochs with continuous monitoring of validation performance. 
+The validation loss decreased steadily during early epochs, indicating effective learning, and reached its minimum at epoch 12 with a validation loss of 0.0892 and accuracy of 98.53%.
+Although minor fluctuations were observed in later epochs, the overall validation accuracy remained high, demonstrating good generalization of the model.
+The lowest validation loss is observed around epoch 12, which indicates the optimal balance between learning and generalization.
+After this point, the validation loss shows minor fluctuations while training loss continues to decrease. 
+This behavior suggests the beginning of overfitting, where the model starts fitting the training data more closely without significant improvement on validation data.
 
 Data provided from the training log for CNN model represented in picture
 
-train_losses = [
-    1.5994, 0.9242, 0.6726, 0.5453, 0.4487, 0.3624, 0.2948, 0.2354, 0.2122, 0.1833,
-    0.1550, 0.1278, 0.1239, 0.0936, 0.0807, 0.0889, 0.0795, 0.0625, 0.0409, 0.0668
+train_loss = [
+    1.3395, 0.6448, 0.3949, 0.2751, 0.2118,0.1584, 0.1331, 0.1187, 0.1103, 0.0891,0.0875, 0.0781, 0.0681, 0.0591, 0.0588    0.0530, 0.0465, 0.0724, 0.0294, 0.0711
 ]
 
-validation_losses = [
-    1.3709, 0.8149, 0.6736, 0.5606, 0.4777, 0.4917, 0.3777, 0.3288, 0.2901, 0.2758,
-    0.2483, 0.2764, 0.2282, 0.1862, 0.2368, 0.2470, 0.2662, 0.1939, 0.1987, 0.2097
+val_loss = [
+    0.9212, 0.4589, 0.3387, 0.3092, 0.1729,0.1987, 0.1558, 0.1237, 0.1085, 0.1372,0.1391, 0.0892, 0.2033, 0.1344, 0.2833, 0.1213, 0.1971, 0.1338, 0.1318, 0.1577
 ]
 
       # epochs = range(1, len(train_losses) + 1)
       
       # # Highlight the optimal stopping point (around Epoch 14)
-      # optimal_epoch = 14
+      # optimal_epoch = 12
       # optimal_val_loss = validation_losses[optimal_epoch - 1]
       
       # Plotting the data
@@ -241,10 +257,10 @@ validation_losses = [
       # plt.tight_layout()
       # plt.show()
       
-<img width="1280" height="612" alt="Learning curve final" src="https://github.com/user-attachments/assets/0fb66438-601a-4964-862c-52f4e340381b" />
+<img width="1280" height="612" alt="Final loss curve for custom CNN" src="https://github.com/user-attachments/assets/b8d35eed-8032-4712-80ca-53b35861fc12" />
 
 
-Load the weights from the OPTIMAL Epoch (Epoch 14 weights)
+Load the weights from the OPTIMAL Epoch (Epoch 12 weights)
 
       # try:
       #     model.load_state_dict(torch.load(CHECKPOINT_PATH))
@@ -252,6 +268,7 @@ Load the weights from the OPTIMAL Epoch (Epoch 14 weights)
       # except FileNotFoundError:
       #     print(f"Error: Checkpoint file not found at {CHECKPOINT_PATH}. Cannot run test evaluation.")
       #     exit()
+      
 8.Testing phase
 
        test_dataset = datasets.ImageFolder(root = "D:/Multiclass Fish Image classification/images.cv/data/test",      # Replace with your actual root path
@@ -297,8 +314,8 @@ Load the weights from the OPTIMAL Epoch (Epoch 14 weights)
 
 The output is 
 Successfully loaded optimal model weights from custom_cnn_checkpoint.pth
-Final Test Loss: 0.1669
-Final Test Accuracy: 94.92%
+Final Test Loss: 0.0811
+Final Test Accuracy: 98.62%
 
 9.Evaluation Metrics
 
@@ -319,26 +336,29 @@ Final Test Accuracy: 94.92%
 
 and the output is
 
-      --- Classification Report (Test Data) ---
-                                          precision    recall  f1-score   support
+           --- Classification Report (Test Data) ---
+                                        precision    recall  f1-score   support
       
-                           animal fish       0.97      0.96      0.96       520
-                      animal fish bass       0.00      0.00      0.00        13
-         fish sea_food black_sea_sprat       0.91      1.00      0.95       298
-         fish sea_food gilt_head_bream       0.96      0.94      0.95       305
-         fish sea_food hourse_mackerel       0.91      0.96      0.93       286
-              fish sea_food red_mullet       0.96      0.90      0.93       291
-           fish sea_food red_sea_bream       0.96      0.96      0.96       273
-                fish sea_food sea_bass       0.95      0.94      0.94       327
-                  fish sea_food shrimp       0.99      0.97      0.98       289
-      fish sea_food striped_red_mullet       0.93      0.93      0.93       293
-                   fish sea_food trout       0.98      0.99      0.98       292
+                           animal fish       0.98      0.98      0.98       520
+                      animal fish bass       0.33      0.08      0.12        13
+         fish sea_food black_sea_sprat       0.98      1.00      0.99       298
+         fish sea_food gilt_head_bream       0.99      0.96      0.97       305
+         fish sea_food hourse_mackerel       1.00      1.00      1.00       286
+              fish sea_food red_mullet       0.99      1.00      1.00       291
+           fish sea_food red_sea_bream       1.00      0.98      0.99       273
+                fish sea_food sea_bass       0.96      0.99      0.98       327
+                  fish sea_food shrimp       1.00      1.00      1.00       289
+      fish sea_food striped_red_mullet       1.00      1.00      1.00       293
+                   fish sea_food trout       0.99      1.00      0.99       292
       
-                              accuracy                           0.95      3187
-                             macro avg       0.86      0.87      0.86      3187
-                          weighted avg       0.95      0.95      0.95      3187
-                          
-<img width="1280" height="612" alt="Confusion matric for CNN" src="https://github.com/user-attachments/assets/f7bb06d9-3dea-4e2e-8be5-2033b98009b2" />
+                              accuracy                           0.99      3187
+                             macro avg       0.93      0.91      0.91      3187
+                          weighted avg       0.98      0.99      0.98      3187
+
+The model achieved 99% accuracy on the test dataset, showing very good overall performance. Most fish classes were classified correctly and consistently, with precision, recall, and F1-scores close to 1.00.
+Almost all classes performed extremely well. One class, “animal fish bass,” showed lower performance because it has very few test samples compared to other classes. This class imbalance affected the model’s ability to learn that category properly.
+Overall, the results indicate that the model is highly effective for fish image classification, with strong performance across nearly all classes.
+
 
 Now its time to test a single image prediction using customised CNN architecture.
 
@@ -399,17 +419,25 @@ Now its time to test a single image prediction using customised CNN architecture
          
 Predicted Output:
 
-The model predicted: Unknown with 0.78% confidence.
+The model predicted: Unknown with 67.72% confidence.
 
-<img width="640" height="480" alt="Prediction for CNN" src="https://github.com/user-attachments/assets/48c68ccf-a77a-472e-9070-a1d1a0e00429" />
+The model predicted: fish sea_food trout with 38.81% confidence.
 
-The model predicted: fish sea_food red_sea_bream with 0.36% confidence.
+Limitations:
 
-<img width="640" height="480" alt="Predicted for CNN known images" src="https://github.com/user-attachments/assets/b2977ae1-f77f-4273-9899-51781c745351" />
+Performance is reduced for classes with fewer samples.
 
+The model may not generalize well to unseen fish species.
 
+Fixed input image size limits real-world adaptability.
 
+Future Scope:
 
+Balance the dataset to improve minority class performance.
+
+Use deeper pre-trained models for better accuracy.
+
+Add unknown class detection for real-world scenarios.
 
 
 
