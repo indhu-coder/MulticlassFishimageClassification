@@ -250,22 +250,22 @@ Next comes the Training phase.
     
 Train loss and accuracy during training:
 
-Epoch [1/5] Loss: 0.4435 | Acc: 90.67%
+<img width="1280" height="612" alt="Training Accuracy" src="https://github.com/user-attachments/assets/fdc0e998-a099-465c-93f7-31f19d1018a1" />
 
-Epoch [2/5] Loss: 0.0866 | Acc: 98.97%
+<img width="640" height="480" alt="Training loss" src="https://github.com/user-attachments/assets/d5201a22-a49b-4722-b286-5139a76cfcbc" />
 
-Epoch [3/5] Loss: 0.0492 | Acc: 99.45%
 
-Epoch [4/5] Loss: 0.0324 | Acc: 99.69%
-
-Epoch [5/5] Loss: 0.0235 | Acc: 99.86%
 
 This tells us:
 
 ✅ Classifier head is learning fast
+
 ✅ Backbone features are very strong
+
 ✅ Loss decreasing smoothly (no instability)
+
 ✅ No exploding / vanishing gradients
+
 ✅ Data pipeline is now correct
 
 Validation phase starts here.
