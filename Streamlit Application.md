@@ -73,3 +73,12 @@ As for the Single image inference the codes are given below:
             else:
                 st.write(f"Model : Vision Transformer | Predicted: {class_names[pred]} | Confidence: {confidence * 100:.2f}")
 
+
+FINAL APPLICATION PAGE LOOKS LIKE THIS
+
+
+<img width="595" height="374" alt="Model page" src="https://github.com/user-attachments/assets/52b63b10-ac84-4414-ae55-72b0cef2d992" />
+
+<img width="455" height="84" alt="Prediction image" src="https://github.com/user-attachments/assets/160a34e3-f31f-4c5b-8cb2-eb20bf5c7793" />
+
+
