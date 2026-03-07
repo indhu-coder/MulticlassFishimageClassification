@@ -81,4 +81,12 @@ FINAL APPLICATION PAGE LOOKS LIKE THIS
 
 <img width="455" height="84" alt="Prediction image" src="https://github.com/user-attachments/assets/160a34e3-f31f-4c5b-8cb2-eb20bf5c7793" />
 
+For "Unknown" images the model prediction is as follows:
+
+<img width="569" height="361" alt="unknwn image" src="https://github.com/user-attachments/assets/8f73dfb8-b987-4d06-9506-2a432b6910cc" />
+
+<img width="482" height="71" alt="unkown prediction" src="https://github.com/user-attachments/assets/c8cb5756-e4ad-4fc3-88d0-e3a4cb139f01" />
+
+
+
 
