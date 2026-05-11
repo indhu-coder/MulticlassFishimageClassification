@@ -1,7 +1,4 @@
-Image Classification is a core computer vision task that involves assigning a predefined label to an image based on its visual content. 
-This project focuses on classifying fish images into multiple categories using deep learning models. 
-The task involves training a CNN from scratch and leveraging transfer learning with pre-trained models to enhance performance. 
-The project also includes saving models for later use and deploying a Streamlit application to predict fish categories from user-uploaded images.
+
 
 Data Collection and Preprocessing:
 The dataset consists of images of fish, categorized into folders by species. 
