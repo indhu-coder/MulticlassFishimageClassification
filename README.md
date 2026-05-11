@@ -20,9 +20,13 @@ Experimented with 5 different pre-trained models for this classification tasks.M
 After evaluating multiple deep learning architectures, the Vision Transformer (ViT) model achieved the best overall performance on the fish image dataset.
 
 Training Accuracy: 99.86%
+
 Validation Accuracy: 99.27%
+
 Final Test Accuracy: 99.31%
+
 Framework: PyTorch
+
 Pretrained Model: google/vit-base-patch16-224
 
 The project also incorporates Energy-Based Out-of-Distribution (OOD) Detection with an energy threshold of -2.521821 to improve reliability when handling unknown image inputs.
